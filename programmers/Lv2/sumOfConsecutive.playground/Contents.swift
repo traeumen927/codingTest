@@ -25,35 +25,45 @@
 
 import Foundation
 
-// FIXME: 투포인트 알고리즘, 시간초과 오류 발생
+// MARK: 투포인터 알고리즘
 func solution(_ sequence:[Int], _ k:Int) -> [Int] {
     
+    var sP:Int = 0
     var eP:Int = 0
     var sum:Int = 0
     var answer = [Int]()
-    var diffMax = 1000000
+    var diffMax = sequence.count
     
-    for sP in 0..<sequence.count {
-        sum = 0
-        eP = sP
-        while sum < k && eP < sequence.count {
-            sum += sequence[eP]
-            eP += 1
-            
-            if sum == k {
-                if diffMax > ((eP - 1) - sP) {
-                    answer = [sP, eP - 1]
-                    diffMax = (eP - 1) - sP
-                }
+    sum += sequence[sP]
+    
+    while sP < sequence.count && eP < sequence.count {
                 
-                break
+        if sum < k {
+            if eP < sequence.count - 1 {
+                eP += 1
+                sum += sequence[eP]
+            } else {
+                sum -= sequence[sP]
+                sP += 1
             }
+        } else if sum > k {
+            sum -= sequence[sP]
+            sP += 1
+        } else if sum == k {
+            let diff = eP - sP
+            if diffMax > diff {
+                diffMax = diff
+                answer = [sP , eP]
+            }
+            sum -= sequence[sP]
+            sP += 1
         }
     }
     return answer
 }
 
-solution([1, 1, 1, 2, 3, 4, 5], 7)
+solution([1, 1, 1, 2, 3, 4, 5], 5)
+solution([2, 2, 2, 2, 2], 6)
 
 /*
  다른 사람의 풀이
